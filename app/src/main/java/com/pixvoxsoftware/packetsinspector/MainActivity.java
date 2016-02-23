@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             pcap.close();
 
 
-            packetsAdapter = new PacketsAdapter(packets);
+            packetsAdapter = new PacketsAdapter(this, packets);
             packetsView.setAdapter(packetsAdapter);
 
         }

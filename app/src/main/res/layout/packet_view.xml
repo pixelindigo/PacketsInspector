@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 android:orientation="vertical" android:layout_width="match_parent"
-android:layout_height="match_parent">
+android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:layout_marginBottom="1dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="1"
+        android:textAlignment="center"
         android:layout_alignParentStart="true"
         android:layout_margin="10dp"
         android:id="@+id/number" />
@@ -14,7 +17,8 @@ android:layout_height="match_parent">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="192.168.1.1"
+        android:text="255.255.255.255"
+        android:textAlignment="center"
         android:layout_toEndOf="@id/number"
         android:layout_margin="10dp"
         android:id="@+id/src_ip" />
@@ -22,16 +26,41 @@ android:layout_height="match_parent">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="192.168.1.10"
-        android:layout_toEndOf="@id/src_ip"
+        android:text="255.255.255.255"
+        android:textAlignment="center"
+        android:layout_alignParentEnd="true"
         android:layout_margin="10dp"
         android:id="@+id/dest_ip" />
+
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:text="65535 bytes"
+        android:textAlignment="textEnd"
+        android:layout_below="@id/number"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dp"
+        android:id="@+id/length" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0.0000"
+        android:textAlignment="textEnd"
+        android:layout_below="@id/number"
+        android:layout_alignParentStart="true"
+        android:layout_margin="10dp"
+        android:id="@+id/time" />
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="UDP"
-        android:layout_toEndOf="@id/dest_ip"
+        android:textAlignment="textEnd"
+        android:layout_below="@id/number"
+        android:layout_toStartOf="@id/length"
         android:layout_margin="10dp"
         android:id="@+id/protocol" />
 </RelativeLayout>
