@@ -1,0 +1,62 @@
+apply plugin: 'com.android.application'
+
+afterEvaluate {
+    android.buildTypes.all { buildType ->
+        def buildTypeName = buildType.name.capitalize()
+        def ndkDir = project.plugins.findPlugin('com.android.application').sdkHandler.getNdkFolder()
+        def ndkCmd = System.getProperty("os.name").toLowerCase().contains("windows") ? "ndk-build.cmd" : "ndk-build"
+        def jniSrcPath = "src/main/jni";
+        def ndkBuild = tasks.create(name: 'ndk' + buildTypeName + 'Build', type: Exec) {
+            def debugFlag = (buildType.name == "debug") ? 1 : 0
+            commandLine "$ndkDir/$ndkCmd",
+                    "NDK_PROJECT_PATH=$jniSrcPath",
+                    "APP_BUILD_SCRIPT=$jniSrcPath/Android.mk",
+//                    "NDK_APPLICATION_MK=$jniSrcPath/Application.mk",
+                    "NDK_DEBUG=$debugFlag"
+        }
+        tasks.getByPath('compile' + buildTypeName + 'JavaWithJavac').dependsOn ndkBuild
+
+        def ndkClean = tasks.create(name: 'ndk' + buildTypeName + 'Clean', type: Exec) {
+            commandLine "$ndkDir/$ndkCmd",
+                    'clean',
+                    "NDK_PROJECT_PATH=$jniSrcPath",
+                    "APP_BUILD_SCRIPT=$jniSrcPath/Android.mk"
+//                    "NDK_APPLICATION_MK=$jniSrcPath/Application.mk"
+        }
+        tasks.getByPath('clean').dependsOn ndkClean
+    }
+}
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    sourceSets {
+        main {
+            jni.srcDirs = []
+            jniLibs.srcDirs = ['src/main/jni/libs']
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.pixvoxsoftware.packetsinspector"
+        minSdkVersion 19
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.jakewharton:butterknife:7.0.1'
+}
