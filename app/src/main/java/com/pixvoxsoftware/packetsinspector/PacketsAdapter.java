@@ -1,8 +1,5 @@
 package com.pixvoxsoftware.packetsinspector;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +11,6 @@ import org.jnetpcap.protocol.network.Ip4;
 import org.jnetpcap.protocol.network.Ip6;
 import org.jnetpcap.protocol.tcpip.Tcp;
 import org.jnetpcap.protocol.tcpip.Udp;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -30,11 +26,9 @@ public class PacketsAdapter extends RecyclerView.Adapter<PacketsAdapter.ViewHold
     private Ip4 ip4;
     private Ip6 ip6;
 
-    private Context context;
     private long time_start;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
         @Bind(R.id.number) public TextView number;
         @Bind(R.id.src_ip) public TextView scr_ip;
         @Bind(R.id.dest_ip) public TextView dest_ip;
@@ -50,19 +44,20 @@ public class PacketsAdapter extends RecyclerView.Adapter<PacketsAdapter.ViewHold
         }
     }
 
-    public PacketsAdapter(Context context, ArrayList<JPacket> packets) {
-        this.packets = packets;
+    public PacketsAdapter() {
         this.ip4 = new Ip4();
         this.ip6 = new Ip6();
+    }
 
-        this.context = context;
-
-        time_start = this.packets.get(0).getCaptureHeader().timestampInNanos();
+    public void setData(ArrayList<JPacket> packets) {
+        this.packets = packets;
+        if (packets.size() != 0) {
+            this.time_start = this.packets.get(0).getCaptureHeader().timestampInNanos();
+        }
     }
 
     @Override
     public PacketsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // create a new view
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.packet_view, parent, false);
 
