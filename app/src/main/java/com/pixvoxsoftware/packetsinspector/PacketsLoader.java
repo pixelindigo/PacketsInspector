@@ -14,11 +14,13 @@ import java.util.ArrayList;
 public class PacketsLoader extends AsyncTask<Integer, Void, Void>{
 
     private ArrayList<JPacket> packets;
+    private PacketsAdapter packetsAdapter;
     private StringBuilder errorBuffer;
     private String path;
 
     public PacketsLoader(final String path, PacketsAdapter packetsAdapter) {
         this.packets = new ArrayList<>();
+        this.packetsAdapter = packetsAdapter;
         packetsAdapter.setData(this.packets);
 
         this.errorBuffer = new StringBuilder();
@@ -36,6 +38,7 @@ public class PacketsLoader extends AsyncTask<Integer, Void, Void>{
                 @Override
                 public void nextPacket(JPacket packet, String user) {
                     packets.add(packet);
+                    publishProgress();
                 }
             };
 
@@ -45,5 +48,12 @@ public class PacketsLoader extends AsyncTask<Integer, Void, Void>{
         }
 
         return null;
+    }
+
+    @Override
+    protected void onProgressUpdate(Void... values) {
+        super.onProgressUpdate(values);
+
+        this.packetsAdapter.notifyDataSetChanged();
     }
 }
