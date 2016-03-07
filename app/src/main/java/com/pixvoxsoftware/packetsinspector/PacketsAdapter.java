@@ -26,8 +26,6 @@ public class PacketsAdapter extends RecyclerView.Adapter<PacketsAdapter.ViewHold
     private Ip4 ip4;
     private Ip6 ip6;
 
-    private long time_start;
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.number) public TextView number;
         @Bind(R.id.src_ip) public TextView scr_ip;
@@ -51,9 +49,6 @@ public class PacketsAdapter extends RecyclerView.Adapter<PacketsAdapter.ViewHold
 
     public void setData(ArrayList<JPacket> packets) {
         this.packets = packets;
-        if (packets.size() != 0) {
-            this.time_start = this.packets.get(0).getCaptureHeader().timestampInNanos();
-        }
     }
 
     @Override
@@ -89,7 +84,8 @@ public class PacketsAdapter extends RecyclerView.Adapter<PacketsAdapter.ViewHold
         holder.scr_ip.setText(sourceIP);
         holder.dest_ip.setText(destinationIP);
         holder.length.setText(String.valueOf(packet.getTotalSize()).concat(" bytes"));
-        double time_shift = (packet.getCaptureHeader().timestampInNanos() - this.time_start) / 10e9;
+        double time_start = this.packets.get(0).getCaptureHeader().timestampInNanos();
+        double time_shift = (packet.getCaptureHeader().timestampInNanos() - time_start) / 10e9;
         holder.time.setText(String.format("%.6f", time_shift));
         if (packet.hasHeader(Udp.ID)) {
 //            holder.view.setBackgroundColor(ContextCompat.getColor(this.context, R.color.udp));
