@@ -1,4 +1,4 @@
-package layout;
+package com.pixvoxsoftware.packetsinspector;
 
 import android.content.Context;
 import android.net.Uri;
@@ -10,32 +10,40 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.pixvoxsoftware.packetsinspector.PacketsAdapter;
-import com.pixvoxsoftware.packetsinspector.R;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class PacketsListFragment extends Fragment {
-    private OnFragmentInteractionListener mListener;
+public class PacketsListFragment extends Fragment implements PacketsListView, PacketsAdapter.OnPacketSelectedListener {
+    private static final String PARAM_PATH = "filepath";
+
+    private OnShowPacketListener onShowPacketListener;
 
     private PacketsAdapter packetsAdapter;
+    private PacketsListPresenter presenter;
 
     @Bind(R.id.packets_view)
     RecyclerView packetsView;
 
     public PacketsListFragment() {
+        this.packetsAdapter = new PacketsAdapter(this);
+        this.presenter = new PacketsListPresenterImpl(this);
     }
 
-    public static PacketsListFragment newInstance(PacketsAdapter packetsAdapter) {
+    public static PacketsListFragment newInstance(String filepath) {
         PacketsListFragment fragment = new PacketsListFragment();
-        fragment.setPacketsAdapter(packetsAdapter);
+        Bundle args = new Bundle();
+        args.putString(PARAM_PATH, filepath);
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            String path = getArguments().getString(PARAM_PATH);
+            this.presenter.loadPackets(path);
+        }
     }
 
     @Override
@@ -52,15 +60,11 @@ public class PacketsListFragment extends Fragment {
         return view;
     }
 
-    public void setPacketsAdapter(PacketsAdapter packetsAdapter) {
-        this.packetsAdapter = packetsAdapter;
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnShowPacketListener) {
+            this.onShowPacketListener = (OnShowPacketListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -70,21 +74,21 @@ public class PacketsListFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        this.onShowPacketListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    @Override
+    public void addPacket(final Packet packet) {
+        this.packetsAdapter.addPacket(packet);
+    }
+
+    @Override
+    public void onPacketSelected(final Packet packet) {
+        this.onShowPacketListener.onShowPacket(packet);
+    }
+
+
+    public interface OnShowPacketListener{
+        void onShowPacket(final Packet packet);
     }
 }

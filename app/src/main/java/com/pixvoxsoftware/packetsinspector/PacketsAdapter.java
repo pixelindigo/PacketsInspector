@@ -6,27 +6,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.jnetpcap.packet.JPacket;
-import org.jnetpcap.protocol.network.Ip4;
-import org.jnetpcap.protocol.network.Ip6;
-import org.jnetpcap.protocol.tcpip.Tcp;
-import org.jnetpcap.protocol.tcpip.Udp;
-
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by m4s4n0bu on 21.02.16.
+ * Created by PixelIndigo.
  */
 public class PacketsAdapter extends RecyclerView.Adapter<PacketsAdapter.ViewHolder> {
 
-    private ArrayList<JPacket> packets;
-    private Ip4 ip4;
-    private Ip6 ip6;
+    private ArrayList<Packet> packets;
+    private OnPacketSelectedListener listener;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder{
         @Bind(R.id.number) public TextView number;
         @Bind(R.id.src_ip) public TextView scr_ip;
         @Bind(R.id.dest_ip) public TextView dest_ip;
@@ -42,13 +35,9 @@ public class PacketsAdapter extends RecyclerView.Adapter<PacketsAdapter.ViewHold
         }
     }
 
-    public PacketsAdapter() {
-        this.ip4 = new Ip4();
-        this.ip6 = new Ip6();
-    }
-
-    public void setData(ArrayList<JPacket> packets) {
-        this.packets = packets;
+    public PacketsAdapter(final OnPacketSelectedListener listener) {
+        this.listener = listener;
+        this.packets = new ArrayList<>();
     }
 
     @Override
@@ -56,44 +45,26 @@ public class PacketsAdapter extends RecyclerView.Adapter<PacketsAdapter.ViewHold
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.packet_view, parent, false);
 
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return new ViewHolder(view);
 
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        JPacket packet = packets.get(position);
-
-        byte[] dIp, sIp;
-        String sourceIP = "", destinationIP = "";
-
-        if (packet.hasHeader(Ip4.ID)) {
-            dIp = packet.getHeader(ip4).destination();
-            sIp = packet.getHeader(ip4).source();
-            sourceIP = org.jnetpcap.packet.format.FormatUtils.ip(sIp);
-            destinationIP = org.jnetpcap.packet.format.FormatUtils.ip(dIp);
-        } else if (packet.hasHeader(Ip6.ID)) {
-            dIp = packet.getHeader(ip6).destination();
-            sIp = packet.getHeader(ip6).source();
-            sourceIP = org.jnetpcap.packet.format.FormatUtils.asStringIp6(sIp, true).toLowerCase();
-            destinationIP = org.jnetpcap.packet.format.FormatUtils.asStringIp6(dIp, true).toLowerCase();
-        }
+        final Packet packet = packets.get(position);
 
         holder.number.setText(String.valueOf(position + 1));
-        holder.scr_ip.setText(sourceIP);
-        holder.dest_ip.setText(destinationIP);
-        holder.length.setText(String.valueOf(packet.getTotalSize()).concat(" bytes"));
-        double time_start = this.packets.get(0).getCaptureHeader().timestampInNanos();
-        double time_shift = (packet.getCaptureHeader().timestampInNanos() - time_start) / 10e9;
-        holder.time.setText(String.format("%.6f", time_shift));
-        if (packet.hasHeader(Udp.ID)) {
-//            holder.view.setBackgroundColor(ContextCompat.getColor(this.context, R.color.udp));
-            holder.protocol.setText("UDP");
-        } else if (packet.hasHeader(Tcp.ID)) {
-//            holder.view.setBackgroundColor(ContextCompat.getColor(this.context, R.color.tcp));
-            holder.protocol.setText("TCP");
-        }
+        holder.scr_ip.setText(packet.getSourceIp());
+        holder.dest_ip.setText(packet.getDestinationIp());
+        holder.length.setText(String.valueOf(packet.getLength()).concat(" bytes"));
+        holder.time.setText(String.format("%.6f", packet.getTimeShift(packets.get(0))));
+
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onPacketSelected(packet);
+            }
+        });
     }
 
     @Override
@@ -101,4 +72,12 @@ public class PacketsAdapter extends RecyclerView.Adapter<PacketsAdapter.ViewHold
         return packets.size();
     }
 
+    public void addPacket(final Packet packet) {
+        this.packets.add(packet);
+        this.notifyDataSetChanged();
+    }
+
+    interface OnPacketSelectedListener{
+        void onPacketSelected(final Packet packet);
+    }
 }
