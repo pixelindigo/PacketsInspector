@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:text="1"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_margin="5dp"
         android:id="@+id/number" />
 
@@ -19,6 +20,7 @@
         android:layout_height="wrap_content"
         android:text="@string/src"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_margin="5dp"
         android:layout_below="@id/number"
         android:id="@+id/label_src_ip"/>
@@ -30,6 +32,7 @@
         android:layout_margin="5dp"
         android:layout_below="@id/number"
         android:layout_toEndOf="@id/label_src_ip"
+        android:layout_toRightOf="@id/label_src_ip"
         android:id="@+id/src_ip" />
 
     <TextView
@@ -37,6 +40,7 @@
         android:layout_height="wrap_content"
         android:text="@string/dest"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_margin="5dp"
         android:layout_below="@id/label_src_ip"
         android:id="@+id/label_dest_ip"/>
@@ -47,6 +51,7 @@
         android:text="255.255.255.255"
         android:layout_below="@id/src_ip"
         android:layout_toEndOf="@id/label_dest_ip"
+        android:layout_toRightOf="@id/label_dest_ip"
         android:layout_margin="5dp"
         android:id="@+id/dest_ip" />
 
@@ -55,6 +60,7 @@
         android:layout_height="wrap_content"
         android:text="UDP"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_margin="5dp"
         android:id="@+id/protocol" />
 
@@ -63,8 +69,10 @@
         android:layout_height="wrap_content"
         android:text="65535 bytes"
         android:textAlignment="textEnd"
+        android:gravity="end"
         android:layout_below="@id/protocol"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_margin="5dp"
         android:id="@+id/length" />
 
@@ -74,8 +82,10 @@
         android:layout_height="wrap_content"
         android:text="0.000000"
         android:textAlignment="textEnd"
+        android:gravity="end"
         android:layout_below="@id/length"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_margin="5dp"
         android:id="@+id/time" />
 
