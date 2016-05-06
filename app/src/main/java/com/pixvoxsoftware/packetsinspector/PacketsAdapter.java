@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -16,7 +17,7 @@ import butterknife.ButterKnife;
  */
 public class PacketsAdapter extends RecyclerView.Adapter<PacketsAdapter.ViewHolder> {
 
-    private ArrayList<Packet> packets;
+    private ArrayList<PacketInfo> packets;
     private OnPacketSelectedListener listener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -51,7 +52,7 @@ public class PacketsAdapter extends RecyclerView.Adapter<PacketsAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final Packet packet = packets.get(position);
+        final PacketInfo packet = packets.get(position);
 
         holder.number.setText(String.valueOf(position + 1));
         holder.scr_ip.setText(packet.getSourceIp());
@@ -72,12 +73,13 @@ public class PacketsAdapter extends RecyclerView.Adapter<PacketsAdapter.ViewHold
         return packets.size();
     }
 
-    public void addPacket(final Packet packet) {
-        this.packets.add(packet);
-        this.notifyDataSetChanged();
+    public void setData(final List<PacketInfo> packets) {
+        this.packets.clear();
+        this.packets.addAll(packets);
+        notifyDataSetChanged();
     }
 
     interface OnPacketSelectedListener{
-        void onPacketSelected(final Packet packet);
+        void onPacketSelected(final PacketInfo packet);
     }
 }

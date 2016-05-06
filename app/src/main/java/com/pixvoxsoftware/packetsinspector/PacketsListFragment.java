@@ -1,7 +1,6 @@
 package com.pixvoxsoftware.packetsinspector;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,6 +25,8 @@ public class PacketsListFragment extends Fragment implements PacketsListView, Pa
 
     @Bind(R.id.packets_view)
     RecyclerView packetsView;
+    @Bind(R.id.progressBar)
+    ProgressBar progressBar;
 
     public PacketsListFragment() {
         this.packetsAdapter = new PacketsAdapter(this);
@@ -41,8 +45,7 @@ public class PacketsListFragment extends Fragment implements PacketsListView, Pa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            String path = getArguments().getString(PARAM_PATH);
-            this.presenter.loadPackets(path);
+            getLoaderManager().initLoader(0, getArguments(), presenter);
         }
     }
 
@@ -78,17 +81,18 @@ public class PacketsListFragment extends Fragment implements PacketsListView, Pa
     }
 
     @Override
-    public void addPacket(final Packet packet) {
-        this.packetsAdapter.addPacket(packet);
+    public void onPacketSelected(final PacketInfo packet) {
+        this.onShowPacketListener.onShowPacket(packet);
     }
 
     @Override
-    public void onPacketSelected(final Packet packet) {
-        this.onShowPacketListener.onShowPacket(packet);
+    public void setPackets(List<PacketInfo> packets) {
+        this.packetsAdapter.setData(packets);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
 
     public interface OnShowPacketListener{
-        void onShowPacket(final Packet packet);
+        void onShowPacket(final PacketInfo packet);
     }
 }

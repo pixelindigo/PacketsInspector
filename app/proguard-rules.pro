@@ -15,3 +15,9 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-keep public class com.mehdok.holders.TreeViewHolder
+-keep public class com.mehdok.holders.TreeViewHolder$TreeViewItem
+-keepclassmembers class com.mehdok.holders.TreeViewHolder {
+    public *;
+    private *;
+}

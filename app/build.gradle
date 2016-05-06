@@ -9,7 +9,7 @@ afterEvaluate {
         def ndkBuild = tasks.create(name: 'ndk' + buildTypeName + 'Build', type: Exec) {
             def debugFlag = (buildType.name == "debug") ? 1 : 0
             commandLine "$ndkDir/$ndkCmd",
-                    "NDK_PROJECT_PATH=$jniSrcPath",
+                    "NDK_PROJECT_PATH=src/main",
                     "APP_BUILD_SCRIPT=$jniSrcPath/Android.mk",
 //                    "NDK_APPLICATION_MK=$jniSrcPath/Application.mk",
                     "NDK_DEBUG=$debugFlag"
@@ -19,7 +19,7 @@ afterEvaluate {
         def ndkClean = tasks.create(name: 'ndk' + buildTypeName + 'Clean', type: Exec) {
             commandLine "$ndkDir/$ndkCmd",
                     'clean',
-                    "NDK_PROJECT_PATH=$jniSrcPath",
+                    "NDK_PROJECT_PATH=src/main",
                     "APP_BUILD_SCRIPT=$jniSrcPath/Android.mk"
 //                    "NDK_APPLICATION_MK=$jniSrcPath/Application.mk"
         }
@@ -29,18 +29,18 @@ afterEvaluate {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
 
     sourceSets {
         main {
             jni.srcDirs = []
-            jniLibs.srcDirs = ['src/main/jni/libs']
+            jniLibs.srcDirs = ['src/main/libs']
         }
     }
 
     defaultConfig {
         applicationId "com.pixvoxsoftware.packetsinspector"
-        minSdkVersion 19
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -56,9 +56,10 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.2.1'
-    compile 'com.android.support:recyclerview-v7:23.2.1'
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:recyclerview-v7:23.3.0'
+    compile 'com.github.bmelnychuk:atv:1.2.+'
     compile 'me.zhanghai.android.materialprogressbar:library:1.1.5'
     compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.android.support:support-v4:23.2.1'
+    compile 'com.android.support:support-v4:23.3.0'
 }

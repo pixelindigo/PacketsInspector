@@ -1,10 +1,11 @@
 package com.pixvoxsoftware.packetsinspector;
 
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity implements PacketsListFragment.OnShowPacketListener {
+public class MainActivity extends AppCompatActivity implements PacketsListFragment.OnShowPacketListener, PacketDetailsFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -13,7 +14,6 @@ public class MainActivity extends AppCompatActivity implements PacketsListFragme
 
         if (savedInstanceState == null) {
             PacketsListFragment packetsListFragment = PacketsListFragment.newInstance(Environment.getExternalStorageDirectory().getPath()+"/newtoy.pcap");
-            packetsListFragment.setRetainInstance(true);
 
             getSupportFragmentManager().beginTransaction().add(R.id.main_fragment, packetsListFragment)
                     .commit();
@@ -21,7 +21,14 @@ public class MainActivity extends AppCompatActivity implements PacketsListFragme
     }
 
     @Override
-    public void onShowPacket(final Packet packet) {
+    public void onShowPacket(final PacketInfo packet) {
+        //TODO Fix
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment,
+                PacketDetailsFragment.newInstance(null)).addToBackStack(null).commit();
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
 
     }
 }
