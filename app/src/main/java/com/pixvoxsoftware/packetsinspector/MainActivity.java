@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements PacketsListFragme
     public void onShowPacket(final PacketInfo packet) {
         //TODO Fix
         getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment,
-                PacketDetailsFragment.newInstance(null)).addToBackStack(null).commit();
+                PacketDetailsFragment.newInstance(Environment.getExternalStorageDirectory().getPath()+"/newtoy.pcap", packet.getFrameNumber())).addToBackStack(null).commit();
     }
 
     @Override

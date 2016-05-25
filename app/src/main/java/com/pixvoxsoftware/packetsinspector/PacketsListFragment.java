@@ -1,5 +1,6 @@
 package com.pixvoxsoftware.packetsinspector;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,8 +26,8 @@ public class PacketsListFragment extends Fragment implements PacketsListView, Pa
 
     @Bind(R.id.packets_view)
     RecyclerView packetsView;
-    @Bind(R.id.progressBar)
-    ProgressBar progressBar;
+
+    ProgressDialog loadingDialog;
 
     public PacketsListFragment() {
         this.packetsAdapter = new PacketsAdapter(this);
@@ -55,10 +56,15 @@ public class PacketsListFragment extends Fragment implements PacketsListView, Pa
         View view = inflater.inflate(R.layout.fragment_packets, container, false);
         ButterKnife.bind(this, view);
 
-        this.packetsView.setHasFixedSize(true);
+        packetsView.setHasFixedSize(true);
 
         packetsView.setLayoutManager(new LinearLayoutManager(container.getContext()));
-        this.packetsView.setAdapter(this.packetsAdapter);
+        packetsView.setAdapter(this.packetsAdapter);
+
+        loadingDialog = new ProgressDialog(getContext(), ProgressDialog.STYLE_SPINNER);
+        loadingDialog.setMessage("Loading. Please, wait.");
+
+        loadingDialog.show();
 
         return view;
     }
@@ -88,7 +94,16 @@ public class PacketsListFragment extends Fragment implements PacketsListView, Pa
     @Override
     public void setPackets(List<PacketInfo> packets) {
         this.packetsAdapter.setData(packets);
-        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void showLoadingDialog() {
+        loadingDialog.show();
+    }
+
+    @Override
+    public void dismissLoadingDialog() {
+        loadingDialog.dismiss();
     }
 
 

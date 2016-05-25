@@ -9,5 +9,7 @@ import java.util.List;
  */
 public interface PacketsListView {
     void setPackets(final List<PacketInfo> packets);
+    void showLoadingDialog();
+    void dismissLoadingDialog();
     Context getContext();
 }

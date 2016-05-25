@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -54,11 +55,20 @@ public class PacketsAdapter extends RecyclerView.Adapter<PacketsAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         final PacketInfo packet = packets.get(position);
 
-        holder.number.setText(String.valueOf(position + 1));
+        holder.number.setText(String.valueOf(packet.getFrameNumber()));
         holder.scr_ip.setText(packet.getSourceIp());
         holder.dest_ip.setText(packet.getDestinationIp());
         holder.length.setText(String.valueOf(packet.getLength()).concat(" bytes"));
-        holder.time.setText(String.format("%.6f", packet.getTimeShift(packets.get(0))));
+        holder.time.setText(String.format(Locale.ENGLISH, "%.6f", packet.getTimeShift(packets.get(0))));
+
+        switch (packet.getProtocol()) {
+            case UDP:
+                holder.protocol.setText(PacketInfo.UDP);
+                break;
+            case TCP:
+                holder.protocol.setText(PacketInfo.TCP);
+                break;
+        }
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override

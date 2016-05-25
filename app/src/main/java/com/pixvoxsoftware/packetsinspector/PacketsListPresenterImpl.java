@@ -24,6 +24,7 @@ public class PacketsListPresenterImpl implements PacketsListPresenter{
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<List<PacketInfo>> loader, List<PacketInfo> data) {
         view.setPackets(data);
+        view.dismissLoadingDialog();
     }
 
     @Override
