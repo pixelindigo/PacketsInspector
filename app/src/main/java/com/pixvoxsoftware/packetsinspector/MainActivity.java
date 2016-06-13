@@ -3,10 +3,14 @@ package com.pixvoxsoftware.packetsinspector;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -21,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements PacketsListFragme
     @Bind(R.id.activity_main_toolbar)
     Toolbar toolbar;
 
+    private PacketsListFragment packetsListFragment;
     private String path;
 
     @Override
@@ -39,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements PacketsListFragme
             } else {
                 path = getIntent().getStringExtra(SELECTED_FILE);
             }
-            PacketsListFragment packetsListFragment = PacketsListFragment.newInstance(path);
+            packetsListFragment = PacketsListFragment.newInstance(path);
 
             getSupportFragmentManager().beginTransaction().add(R.id.main_fragment, packetsListFragment)
                     .commit();
@@ -58,6 +63,29 @@ public class MainActivity extends AppCompatActivity implements PacketsListFragme
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.appbar_packets_list, menu);
+
+        MenuItem filterItem = menu.findItem(R.id.action_filter);
+        if (getSupportFragmentManager().getBackStackEntryCount() != 0) {
+            filterItem.setVisible(false);
+        } else {
+            SearchView searchView =
+                    (SearchView) MenuItemCompat.getActionView(filterItem);
+
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    packetsListFragment.filterPackets(query);
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    packetsListFragment.filterPackets(newText);
+                    return false;
+                }
+            });
+
+        }
         return true;
     }
 
@@ -76,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements PacketsListFragme
         if (getSupportActionBar() != null) {
             boolean enabled = getSupportFragmentManager().getBackStackEntryCount() != 0;
             getSupportActionBar().setDisplayHomeAsUpEnabled(enabled);
+            invalidateOptionsMenu();
         }
     }
 
@@ -88,5 +117,16 @@ public class MainActivity extends AppCompatActivity implements PacketsListFragme
     public boolean onSupportNavigateUp() {
         getSupportFragmentManager().popBackStack();
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_filter:
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

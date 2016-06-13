@@ -3,5 +3,6 @@
     <string name="src">SRC:</string>
     <string name="dest">DST:</string>
     <string name="action_browse_file">Browse file</string>
+    <string name="action_filter">Filter</string>
     <string name="internal_memory">Internal memory</string>
 </resources>

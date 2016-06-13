@@ -18,7 +18,9 @@ import butterknife.ButterKnife;
  */
 public class PacketsAdapter extends RecyclerView.Adapter<PacketsAdapter.ViewHolder> {
 
-    private ArrayList<PacketInfo> packets;
+    private ArrayList<PacketInfo> allPackets;
+    private ArrayList<PacketInfo> visiblePackets;
+    
     private OnPacketSelectedListener listener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -39,7 +41,8 @@ public class PacketsAdapter extends RecyclerView.Adapter<PacketsAdapter.ViewHold
 
     public PacketsAdapter(final OnPacketSelectedListener listener) {
         this.listener = listener;
-        this.packets = new ArrayList<>();
+        allPackets = new ArrayList<>();
+        visiblePackets = new ArrayList<>();
     }
 
     @Override
@@ -53,13 +56,13 @@ public class PacketsAdapter extends RecyclerView.Adapter<PacketsAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final PacketInfo packet = packets.get(position);
+        final PacketInfo packet = visiblePackets.get(position);
 
         holder.number.setText(String.valueOf(packet.getFrameNumber()));
         holder.scr_ip.setText(packet.getSourceIp());
         holder.dest_ip.setText(packet.getDestinationIp());
         holder.length.setText(String.valueOf(packet.getLength()).concat(" bytes"));
-        holder.time.setText(String.format(Locale.ENGLISH, "%.6f", packet.getTimeShift(packets.get(0))));
+        holder.time.setText(String.format(Locale.ENGLISH, "%.6f", packet.getTimeShift(allPackets.get(0))));
 
         switch (packet.getProtocol()) {
             case UDP:
@@ -80,13 +83,36 @@ public class PacketsAdapter extends RecyclerView.Adapter<PacketsAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return packets.size();
+        return visiblePackets.size();
     }
 
-    public void setData(final List<PacketInfo> packets) {
-        this.packets.clear();
-        this.packets.addAll(packets);
+    public void setData(final List<PacketInfo> allPackets) {
+        this.allPackets.clear();
+        this.allPackets.addAll(allPackets);
+        visiblePackets.clear();
+        visiblePackets.addAll(allPackets);
         notifyDataSetChanged();
+    }
+
+    public void filterData(String query) {
+        visiblePackets.clear();
+        if (isValidQuery(query)) {
+            if (query.equals("")) {
+                visiblePackets.addAll(allPackets);
+            } else {
+                for (PacketInfo packetInfo : allPackets) {
+                    if (packetInfo.getSourceIp() != null && packetInfo.getSourceIp().equals(query) ||
+                            packetInfo.getDestinationIp() != null && packetInfo.getDestinationIp().equals(query)) {
+                        visiblePackets.add(packetInfo);
+                    }
+                }
+            }
+            notifyDataSetChanged();
+        }
+    }
+
+    boolean isValidQuery(String query) {
+        return query.equals("") || Utils.isValidAddress(query);
     }
 
     interface OnPacketSelectedListener{

@@ -15,7 +15,7 @@ import java.util.Locale;
  */
 public class PacketInfo {
 
-    enum Protocol {UDP, TCP};
+    enum Protocol {UDP, TCP}
 
     public static final String UDP = "UDP";
     public static final String TCP = "TCP";

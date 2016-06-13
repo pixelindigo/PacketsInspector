@@ -23,6 +23,7 @@
                 android:layout_alignParentLeft="true"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Header"/>
+
             <TextView
                 android:id="@+id/cardPayload"
                 android:layout_width="wrap_content"

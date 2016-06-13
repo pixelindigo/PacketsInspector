@@ -106,6 +106,9 @@ public class PacketsListFragment extends Fragment implements PacketsListView, Pa
         loadingDialog.dismiss();
     }
 
+    public void filterPackets(String query) {
+        packetsAdapter.filterData(query);
+    }
 
     public interface OnShowPacketListener{
         void onShowPacket(final PacketInfo packet);
