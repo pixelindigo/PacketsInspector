@@ -1,5 +1,6 @@
 package com.pixvoxsoftware.packetsinspector;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,7 +31,12 @@ public class MainActivity extends AppCompatActivity implements PacketsListFragme
         setSupportActionBar(toolbar);
 
         if (savedInstanceState == null) {
-            path = getIntent().getStringExtra(SELECTED_FILE);
+            if (getIntent().getAction() != null &&
+                    getIntent().getAction().equals(Intent.ACTION_VIEW)) {
+                path = getIntent().getData().getPath();
+            } else {
+                path = getIntent().getStringExtra(SELECTED_FILE);
+            }
             PacketsListFragment packetsListFragment = PacketsListFragment.newInstance(path);
 
             getSupportFragmentManager().beginTransaction().add(R.id.main_fragment, packetsListFragment)
