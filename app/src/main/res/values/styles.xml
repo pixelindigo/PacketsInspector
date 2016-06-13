@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -11,6 +11,9 @@
     <!--Tree node style-->
     <style name="DetailsItemNode">
         <item name="android:paddingLeft">20dp</item>
+    </style>
+    <style name="RecentFileHeadingText" parent="@android:style/TextAppearance">
+        <item name="android:textSize">16sp</item>
     </style>
 
 </resources>

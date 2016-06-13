@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/filebrowser_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/ic_arrow_back_black_24dp"
+        android:padding="24dp"/>
+<TextView
+    android:id="@+id/action_browse_file_label"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_toRightOf="@id/filebrowser_arrow"
+    android:layout_toEndOf="@id/filebrowser_arrow"
+    android:layout_marginTop="12dp"
+    android:text="@string/action_browse_file"/>
+
+    <TextView
+        android:id="@+id/filebrowser_directory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/filebrowser_arrow"
+        android:layout_toEndOf="@id/filebrowser_arrow"
+        android:layout_below="@id/action_browse_file_label"
+        android:text="@string/internal_memory"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        />
+</RelativeLayout>

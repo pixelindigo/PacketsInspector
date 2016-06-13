@@ -2,7 +2,6 @@
     <string name="app_name">PacketsInspector</string>
     <string name="src">SRC:</string>
     <string name="dest">DST:</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_browse_file">Browse file</string>
+    <string name="internal_memory">Internal memory</string>
 </resources>

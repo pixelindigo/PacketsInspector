@@ -3,6 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorSelectedItem">#c5cae9</color>
+    <color name="title">#000</color>
 
     <!-- Packet protocol coloring-->
     <color name="udp">#00ee14</color>
